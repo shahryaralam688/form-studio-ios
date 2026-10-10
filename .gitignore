@@ -1,0 +1,51 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+**/.DS_Store
+
+# Xcode
+/build/
+DerivedData/
+# Note: WebContent/build/ is the Three.js module bundle — keep it tracked
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+
+# CocoaPods / Carthage (if added later)
+Pods/
+Carthage/Build/
+
+# Env / secrets
+.env
+.env.*
+*.pem
+*.p12
+*.mobileprovision
+Credentials.plist
+secrets/
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Logs / temp
+*.log
+tmp/
+temp/
