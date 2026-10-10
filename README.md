@@ -6,6 +6,20 @@ The 3D scene runs inside a **SwiftUI `WKWebView`** shell that loads local HTML/C
 
 ---
 
+## Demo video
+
+Full walkthrough of the app (library → instructions → countdown → guided form tour → live 3D demo):
+
+https://github.com/shahryaralam688/form-studio-ios/raw/main/docs/form-studio-demo.mp4
+
+<video src="docs/form-studio-demo.mp4" controls width="360" playsinline>
+  Your browser does not support the video tag. <a href="docs/form-studio-demo.mp4">Download the demo</a>
+</video>
+
+> File in repo: [`docs/form-studio-demo.mp4`](docs/form-studio-demo.mp4) (~2.5 min)
+
+---
+
 ## What this project does
 
 1. **Exercise library** — six bodyweight moves with level, muscles, balance cues, steps, and common mistakes  
