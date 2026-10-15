@@ -22,7 +22,7 @@ https://github.com/shahryaralam688/form-studio-ios/raw/main/docs/form-studio-dem
 
 ## What this project does
 
-1. **Exercise library** — six bodyweight moves with level, muscles, balance cues, steps, and common mistakes  
+1. **Exercise library** — thirty moves (3D Mixamo demos + coach-only cues) with level, muscles, balance, steps, and mistakes  
 2. **Instructions sheet** — glassmorphism UI with orange brand accent (`#F38002`)  
 3. **Countdown** — 3 → 2 → 1 → GO  
 4. **Guided form tour** — same Mixamo clip scrubbed between cue times so limbs *animate* into each coaching pose (not static image jumps); tiny bone pins + captions in a bottom dock  
@@ -34,14 +34,40 @@ https://github.com/shahryaralam688/form-studio-ios/raw/main/docs/form-studio-dem
 
 ## Exercises included
 
-| Exercise       | Focus                         |
-|----------------|-------------------------------|
-| Push-Ups       | Chest, shoulders, triceps, core |
-| Air Squats     | Legs, hips, posture           |
-| Jumping Jacks  | Cardio, coordination           |
-| Plank Hold     | Core stability                |
-| Sit-Ups        | Abs, controlled flexion       |
-| Burpees        | Full-body conditioning        |
+| Exercise                | Mode   | Focus |
+|-------------------------|--------|-------|
+| Push-Ups                | 3D     | Chest, shoulders, triceps, core |
+| Air Squats              | 3D     | Legs, hips, posture |
+| Jumping Jacks           | 3D     | Cardio, coordination |
+| Plank Hold              | 3D     | Core stability |
+| Sit-Ups                 | 3D     | Abs, controlled flexion |
+| Burpees                 | 3D     | Full-body conditioning |
+| Warming Up              | 3D     | Full-body warm-up |
+| Arm Stretching          | 3D     | Shoulders, chest, upper back |
+| Bicycle Crunches        | 3D     | Abs, obliques |
+| Circle Crunches         | 3D     | Abs, controlled circles |
+| Jump Push-Ups           | 3D     | Explosive chest & power |
+| Overhead Squats         | 3D     | Legs, shoulders, posture |
+| Hip Hinge Drill         | 3D     | Hinge pattern (KB swing clip) |
+| Walking Lunges          | Coach  | Single-leg strength |
+| Romanian Deadlift       | Coach  | Hip hinge strength |
+| Overhead Press          | Coach  | Standing shoulder press |
+| Bent Over Row           | Coach  | Back thickness |
+| Glute Bridge            | Coach  | Posterior chain |
+| Bird Dog                | Coach  | Anti-rotation core |
+| Dead Bug                | Coach  | Floor core stability |
+| Cat Cow                 | Coach  | Spinal mobility |
+| World’s Greatest Stretch| Coach  | Hip / T-spine opener |
+| Seated Row              | Coach  | Machine / cable row |
+| Seated Shoulder Press   | Coach  | Seated press |
+| Chest Press Machine     | Coach  | Guided chest press |
+| Bike Sprint             | Coach  | Hard bike intervals |
+| Zone 2 Bike             | Coach  | Easy aerobic bike |
+| Easy Walk               | Coach  | Recovery walking |
+| Hiking Intervals        | Coach  | Hills + easy recoveries |
+| Sun Breath Flow         | Coach  | Breath-led mobility |
+
+**Coach mode** (`has3d: false`): full instructions + cue tour on the idle character (no Mixamo exercise clip yet). Drop a matching FBX in `WebContent/models/exercises/`, set `file`, and remove `has3d: false` to enable 3D scrub/live.
 
 Animations are **Mixamo FBX** motion clips, played on the **X_Bot** Mixamo character (`scale = 0.01`) via Three.js `AnimationMixer`.
 

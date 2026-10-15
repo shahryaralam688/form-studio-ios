@@ -15,7 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0F364BE8581FB040A558DC46 /* ThreeJSAdditive.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ThreeJSAdditive.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F364BE8581FB040A558DC46 /* ThreeJSAdditive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ThreeJSAdditive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42251AF8AB9E747F37D674E6 /* WebContent */ = {isa = PBXFileReference; lastKnownFileType = folder; path = WebContent; sourceTree = SOURCE_ROOT; };
 		527D209464CCA45906F92E59 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		800E8668BF6F949135420D72 /* ThreeJSWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeJSWebView.swift; sourceTree = "<group>"; };
@@ -83,7 +83,6 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					A28F0021E0921CD8C5B74972 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -139,7 +138,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7L4359M6G7;
 				ENABLE_PREVIEWS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -292,7 +291,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7L4359M6G7;
 				ENABLE_PREVIEWS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

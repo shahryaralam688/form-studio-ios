@@ -387,6 +387,16 @@ body[data-screen="instruct"] .sheet {
 	font-weight: 600;
 }
 
+.card-tags .tag-coach {
+	background: rgba(243, 128, 2, 0.14);
+	border-color: rgba(243, 128, 2, 0.35);
+	color: var(--orange-deep);
+}
+
+.exercise-card.coach-only {
+	border-style: dashed;
+}
+
 .instruct-top {
 	display: flex;
 	flex-direction: column;

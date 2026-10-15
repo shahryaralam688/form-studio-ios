@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
-import { EXERCISES, getExercise } from './exercises.js';
+import { EXERCISES, getExercise, exerciseHas3d } from './exercises.js';
 import { GUIDE_VIEWS, enrichGuide } from './guide-data.js';
 
 /**
@@ -479,6 +479,8 @@ async function preloadClips() {
 
 	await Promise.all( EXERCISES.map( async ( ex ) => {
 
+		if ( ! exerciseHas3d( ex ) ) return;
+
 		try {
 
 			exerciseClips.set( ex.id, await loadClip( ex.file, ex.id ) );
@@ -512,6 +514,10 @@ function buildLibrary() {
 		card.type = 'button';
 		card.className = 'exercise-card';
 		card.dataset.id = ex.id;
+		const modeTag = exerciseHas3d( ex )
+			? ''
+			: '<span class="tag-coach">Coach</span>';
+		card.classList.toggle( 'coach-only', ! exerciseHas3d( ex ) );
 		card.innerHTML = `
 			<div class="card-top">
 				<span class="card-index">${ String( index + 1 ).padStart( 2, '0' ) }</span>
@@ -521,6 +527,7 @@ function buildLibrary() {
 			<p>${ ex.tagline }</p>
 			<div class="card-tags">
 				<span>${ ex.level }</span>
+				${ modeTag }
 				${ ex.muscles.slice( 0, 2 ).map( ( m ) => `<span>${ m }</span>` ).join( '' ) }
 			</div>
 		`;
@@ -679,6 +686,19 @@ function openInstructions( id ) {
 	fillList( 'stepsList', ex.steps, true );
 	fillList( 'mistakesList', ex.mistakes );
 	els.statusLabel.textContent = ex.name;
+	const startBtn = document.getElementById( 'startExerciseBtn' );
+	if ( exerciseHas3d( ex ) ) {
+
+		startBtn.querySelector( 'span' ).textContent = 'Start guided demo';
+		startBtn.querySelector( 'small' ).textContent = 'Body positions · one by one';
+
+	} else {
+
+		startBtn.querySelector( 'span' ).textContent = 'Start coaching cues';
+		startBtn.querySelector( 'small' ).textContent = 'Form tips · no 3D clip yet';
+
+	}
+
 	clearBodyMarkers();
 	if ( skeleton ) skeleton.visible = document.getElementById( 'skeletonBtn' ).classList.contains( 'active' );
 	frameView( 'full' );
@@ -704,7 +724,8 @@ function fillList( id, items, numbered = false ) {
 function beginCountdown() {
 
 	const ex = getExercise( state.selectedId );
-	if ( ! ex || ! exerciseClips.has( ex.id ) ) {
+	if ( ! ex ) return;
+	if ( exerciseHas3d( ex ) && ! exerciseClips.has( ex.id ) ) {
 
 		els.statusLabel.textContent = 'Still loading — try again';
 		return;
@@ -738,16 +759,19 @@ function beginCountdown() {
 
 function ensureExerciseAction( ex, { reset = false } = {} ) {
 
-	const clip = exerciseClips.get( ex.id );
+	const has3d = exerciseHas3d( ex ) && exerciseClips.has( ex.id );
+	const clip = has3d ? exerciseClips.get( ex.id ) : exerciseClips.get( '__idle__' );
+	if ( ! clip ) return { clip: null, action: null };
+
 	const action = mixer.clipAction( clip );
 	const alreadyBound = state.exerciseAction === action && action.isRunning();
 
-	if ( state.idleAction?.isRunning() ) state.idleAction.fadeOut( 0.2 );
+	if ( state.idleAction?.isRunning() && action !== state.idleAction ) state.idleAction.fadeOut( 0.2 );
 
 	action.enabled = true;
 	action.setEffectiveWeight( 1 );
-	action.setLoop( THREE.LoopOnce, 1 );
-	action.clampWhenFinished = true;
+	action.setLoop( has3d ? THREE.LoopOnce : THREE.LoopRepeat, has3d ? 1 : Infinity );
+	action.clampWhenFinished = has3d;
 
 	if ( ! alreadyBound || reset ) {
 
@@ -912,7 +936,9 @@ function startGuide( ex ) {
 	ensureExerciseAction( ex, { reset: true } );
 	if ( mixer ) mixer.timeScale = 1;
 	showScreen( 'guide' );
-	els.statusLabel.textContent = `Guide · ${ ex.name }`;
+	els.statusLabel.textContent = exerciseHas3d( ex )
+		? `Guide · ${ ex.name }`
+		: `Coach · ${ ex.name }`;
 	showGuideStep( ex, 0, { first: true } );
 
 }
@@ -945,11 +971,30 @@ function showGuideStep( ex, index, { first = false } = {} ) {
 	els.guideCount.textContent = `${ index + 1 } / ${ steps.length }`;
 	els.guideBackBtn.disabled = index === 0;
 	els.guideBackBtn.style.opacity = index === 0 ? '0.45' : '1';
-	els.guideNextBtn.textContent = index >= steps.length - 1 ? 'Demo' : 'Next';
+	els.guideNextBtn.textContent = index >= steps.length - 1 ? 'Live' : 'Next';
 	renderGuideProgress( steps.length, index );
 
-	// Animate limbs through the clip to this cue (same model sequence)
-	seekGuideToTime( action, clip, step.t ?? 0.1, step.view || 'full' );
+	const canScrub = exerciseHas3d( ex ) && clip && action;
+	if ( canScrub ) {
+
+		// Animate limbs through the clip to this cue (same model sequence)
+		seekGuideToTime( action, clip, step.t ?? 0.1, step.view || 'full' );
+
+	} else {
+
+		// Coach-only: captions + markers on idle pose (no clip scrub)
+		state.guideSeeking = false;
+		if ( action ) {
+
+			action.paused = false;
+			action.setEffectiveTimeScale( 1 );
+
+		}
+
+		if ( ! state.userCameraLock ) frameGuideBody( true, step.view || 'full' );
+		scheduleGuideHold();
+
+	}
 
 }
 
@@ -1049,7 +1094,16 @@ function startWorkout( ex ) {
 	state.guideSeeking = false;
 	state.userCameraLock = false;
 
-	const clip = exerciseClips.get( ex.id );
+	const clip = exerciseHas3d( ex )
+		? exerciseClips.get( ex.id )
+		: exerciseClips.get( '__idle__' );
+	if ( ! clip ) {
+
+		els.statusLabel.textContent = 'Still loading — try again';
+		return;
+
+	}
+
 	const action = mixer.clipAction( clip );
 	action.paused = false;
 	action.setEffectiveTimeScale( 1 );
@@ -1071,7 +1125,9 @@ function startWorkout( ex ) {
 	els.workoutTitle.textContent = ex.name;
 	els.liveCue.textContent = ex.cues[ 0 ];
 	state.cueIndex = 0;
-	els.statusLabel.textContent = `Live · ${ ex.name }`;
+	els.statusLabel.textContent = exerciseHas3d( ex )
+		? `Live · ${ ex.name }`
+		: `Coach · ${ ex.name }`;
 
 	applySpeed( Number( els.speedSlider.value ) || 1 );
 	if ( mixer ) mixer.timeScale = state.savedTimeScale || 1;
